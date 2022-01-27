@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "922164390929",
+    "project_id": "connect-next-ba6f5",
+    "storage_bucket": "connect-next-ba6f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922164390929:android:fd85fb51c644a8e25455b0",
+        "android_client_info": {
+          "package_name": "com.connectnext.connectnext_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "922164390929-37r992mcp9src3frab6q9244eqvaliu8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.connectnext.connectnext_app",
+            "certificate_hash": "064861c2b271bcf89aff6dc071cbe9f08dfa77fe"
+          }
+        },
+        {
+          "client_id": "922164390929-rulskkj07i8lhsnnpcb8ifilccc426pt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBG8no-Bv2btfAVHePekYGj1myzW6yUQvs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922164390929-rulskkj07i8lhsnnpcb8ifilccc426pt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

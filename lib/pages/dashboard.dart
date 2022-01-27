@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -8,134 +10,181 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  final Stream<QuerySnapshot> ordersStream =
+      FirebaseFirestore.instance.collection('orders').snapshots();
+
+  CollectionReference orders = FirebaseFirestore.instance.collection('orders');
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Connect Next"),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.supervised_user_circle_outlined,
-              size: 30,
-            ),
-            onPressed: () {
-              // Navigator.pushNamed(context, '/settings');
-            },
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const ScrollPhysics(),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 3,
-                  decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [
-                      0.9,
-                      1,
-                    ],
-                    colors: [
-                      Colors.yellow,
-                      Color(0xfffffca2),
-                    ],
-                  )),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            textStyle: MaterialStateProperty.all(
-                              const TextStyle(
-                                  color: Colors.white, fontSize: 20),
-                            ),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                            ),
-                            minimumSize: MaterialStateProperty.all(
-                              Size(
-                                MediaQuery.of(context).size.width / 1.5,
-                                MediaQuery.of(context).size.height / 15,
-                              ),
-                            ),
-                            backgroundColor: MaterialStateProperty.all(
-                              Colors.black,
-                            ),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text('Where are you?'),
-                          ),
-                          onPressed: () {
-                            // print("SUBMITTED");
-                          },
-                        ),
-                      ]),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "Dashboard",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+    return StreamBuilder<QuerySnapshot>(
+        stream: ordersStream,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            print('Something went Wrong');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          final List storedocs = [];
+          snapshot.data!.docs.map((DocumentSnapshot document) {
+            Map<String, dynamic> a = document.data() as Map<String, dynamic>;
+            storedocs.add(a);
+            a['id'] = document.id;
+          }).toList();
+
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text("Connect Next"),
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.supervised_user_circle_outlined,
+                    size: 30,
                   ),
+                  onPressed: () {
+                    // Navigator.pushNamed(context, '/settings');
+                  },
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).size.height / 5),
-                      itemCount: 15,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                            child: Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
-                                child: Text("Order Id: $index"),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
-                                child: Text("From: Borivali"),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
-                                child: Text("To: Malad"),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(5, 5, 5, 10),
-                                child: Text("Details ->",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        decoration: TextDecoration.underline)),
-                              ),
-                            ],
-                          ),
-                        ));
-                      },
-                    ),
-                  ),
-                )
               ],
             ),
-          ),
-        ),
-      ),
-    );
+            body: SafeArea(
+              child: SingleChildScrollView(
+                physics: const ScrollPhysics(),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height / 3,
+                        decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [
+                            0.9,
+                            1,
+                          ],
+                          colors: [
+                            Colors.yellow,
+                            Color(0xfffffca2),
+                          ],
+                        )),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                style: ButtonStyle(
+                                  textStyle: MaterialStateProperty.all(
+                                    const TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                  ),
+                                  minimumSize: MaterialStateProperty.all(
+                                    Size(
+                                      MediaQuery.of(context).size.width / 1.5,
+                                      MediaQuery.of(context).size.height / 15,
+                                    ),
+                                  ),
+                                  backgroundColor: MaterialStateProperty.all(
+                                    Colors.black,
+                                  ),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text('Where are you?'),
+                                ),
+                                onPressed: () {
+                                  // print("SUBMITTED");
+                                },
+                              ),
+                            ]),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          "Dashboard",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListView.builder(
+                            padding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).size.height / 5),
+                            itemCount: storedocs.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                  child: Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          5, 10, 5, 0),
+                                      child: Text(storedocs[index]['id']),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(5, 5, 5, 0),
+                                      child:
+                                          Text(storedocs[index]['from_area']),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(5, 5, 5, 0),
+                                      child: Text(storedocs[index]['to_area']),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          5, 5, 5, 10),
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            Map<String, dynamic> sDMap =
+                                                Map<String, dynamic>.from(
+                                                    storedocs[index]);
+                                            Map<String, String>
+                                                stringQueryParameters =
+                                                sDMap.map((key, value) =>
+                                                    MapEntry(
+                                                        key, value.toString()));
+                                            var parameters =
+                                                stringQueryParameters;
+                                            Get.toNamed("/order_details",
+                                                parameters: parameters);
+                                          },
+                                          child: const Text("View Details",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  decoration: TextDecoration
+                                                      .underline))),
+                                    ),
+                                  ],
+                                ),
+                              ));
+                            },
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
 

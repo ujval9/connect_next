@@ -7,7 +7,7 @@ import 'dashboard.dart';
 
 class MasterScreen extends StatefulWidget {
   const MasterScreen({Key? key}) : super(key: key);
-
+  
   @override
   _MasterScreenState createState() => _MasterScreenState();
 }

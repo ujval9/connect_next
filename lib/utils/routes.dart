@@ -1,5 +1,6 @@
 import 'package:connectnext_app/pages/login.dart';
 import 'package:connectnext_app/pages/master.dart';
+import 'package:connectnext_app/pages/order_details.dart';
 import 'package:connectnext_app/pages/splash.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +13,10 @@ class AppRoutes {
       name: '/login',
       page: () => const LoginScreen(),
     ),
-
+    GetPage(
+      name: '/order_details',
+      page: () => const OrderDetailsPage(),
+    ),
     // GetPage(
     //   name: '/properks',
     //   page: () => ProperksScreen(),
