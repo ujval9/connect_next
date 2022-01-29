@@ -12,6 +12,7 @@ class _ActiveDeliveryPageState extends State<ActiveDeliveryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.yellow,
       appBar: AppBar(
         title: const Text("Connect Next"),
         actions: [

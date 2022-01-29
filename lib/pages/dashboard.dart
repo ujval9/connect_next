@@ -134,23 +134,39 @@ class _DashboardPageState extends State<DashboardPage> {
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           5, 10, 5, 0),
-                                      child: Text(storedocs[index]['id']),
+                                      child: Text(
+                                          'Order Id:' + storedocs[index]['id']),
                                     ),
                                     Padding(
                                       padding:
                                           const EdgeInsets.fromLTRB(5, 5, 5, 0),
-                                      child:
-                                          Text(storedocs[index]['from_area']),
+                                      child: Text('From:' +
+                                          storedocs[index]['from_area']),
                                     ),
                                     Padding(
                                       padding:
                                           const EdgeInsets.fromLTRB(5, 5, 5, 0),
-                                      child: Text(storedocs[index]['to_area']),
+                                      child: Text(
+                                          'To: ' + storedocs[index]['to_area']),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           5, 5, 5, 10),
                                       child: ElevatedButton(
+                                          style: ButtonStyle(
+                                            // textStyle: MaterialStateProperty.all(
+                                            //   const TextStyle(color: Colors.white, fontSize: 20),
+                                            // ),
+                                            // shape: MaterialStateProperty.all(
+                                            //   RoundedRectangleBorder(
+                                            //     borderRadius: BorderRadius.circular(15.0),
+                                            //   ),
+                                            // ),
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                              Colors.black,
+                                            ),
+                                          ),
                                           onPressed: () {
                                             Map<String, dynamic> sDMap =
                                                 Map<String, dynamic>.from(

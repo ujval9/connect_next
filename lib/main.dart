@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
               theme: Themes().lightTheme(),
             );
           }        
-        return CircularProgressIndicator();
+        return const CircularProgressIndicator();
         });
   }
 }
