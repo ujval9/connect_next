@@ -1,4 +1,3 @@
-import 'package:connectnext_app/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'activedelivery.dart';
@@ -12,20 +11,6 @@ class OrderDetailsPage extends StatefulWidget {
 }
 
 class _OrderDetailsPageState extends State<OrderDetailsPage> {
-  int _currentIndex = 0;
-  final List _screens = [
-    const DashboardPage(),
-    const ActiveDeliveryPage(),
-    const ProfilePage(),
-  ];
-  void _updateIndex(int value) {
-    setState(
-      () {
-        _currentIndex = value;
-      },
-    );
-  }
-
   @override
   void initState() {
     super.initState();

@@ -7,25 +7,18 @@ import 'dashboard.dart';
 
 class MasterScreen extends StatefulWidget {
   const MasterScreen({Key? key}) : super(key: key);
-  
+
   @override
   _MasterScreenState createState() => _MasterScreenState();
 }
 
 class _MasterScreenState extends State<MasterScreen> {
   int _currentIndex = 0;
-  final List _screens = [
+  final List<Widget> _screens = [
     const DashboardPage(),
     const ActiveDeliveryPage(),
     const ProfilePage(),
   ];
-  void _updateIndex(int value) {
-    setState(
-      () {
-        _currentIndex = value;
-      },
-    );
-  }
 
   @override
   void initState() {
@@ -38,15 +31,30 @@ class _MasterScreenState extends State<MasterScreen> {
     );
   }
 
+  final PageController _pageController = PageController();
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: PageView(
+        controller: _pageController,
+        children: _screens,
+        onPageChanged: (page) {
+          setState(() {
+            _selectedIndex = page;
+          });
+        },
+      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).primaryColor,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
-        onTap: _updateIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          onTabTapped(_selectedIndex);
+        },
         selectedItemColor: Colors.white,
         selectedFontSize: 13,
         unselectedFontSize: 13,
@@ -57,7 +65,7 @@ class _MasterScreenState extends State<MasterScreen> {
             icon: Icon(Icons.grid_view),
           ),
           BottomNavigationBarItem(
-            label: "Active Delivery",
+            label: "My Deliveries",
             icon: Icon(Icons.access_time_outlined),
           ),
           BottomNavigationBarItem(
@@ -67,5 +75,9 @@ class _MasterScreenState extends State<MasterScreen> {
         ],
       ),
     );
+  }
+
+  void onTabTapped(int index) {
+    _pageController.jumpToPage(index);
   }
 }
