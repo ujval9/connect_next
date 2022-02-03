@@ -154,14 +154,6 @@ class _DashboardPageState extends State<DashboardPage> {
                                           5, 5, 5, 10),
                                       child: ElevatedButton(
                                           style: ButtonStyle(
-                                            // textStyle: MaterialStateProperty.all(
-                                            //   const TextStyle(color: Colors.white, fontSize: 20),
-                                            // ),
-                                            // shape: MaterialStateProperty.all(
-                                            //   RoundedRectangleBorder(
-                                            //     borderRadius: BorderRadius.circular(15.0),
-                                            //   ),
-                                            // ),
                                             backgroundColor:
                                                 MaterialStateProperty.all(
                                               Colors.black,
