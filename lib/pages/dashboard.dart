@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectnext_app/utils/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,10 +11,13 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  final Stream<QuerySnapshot> ordersStream =
-      FirebaseFirestore.instance.collection('orders').snapshots();
+  late Stream<QuerySnapshot> ordersStream;
 
-  CollectionReference orders = FirebaseFirestore.instance.collection('orders');
+  @override
+  void initState() {
+    ordersStream = getOrders();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
