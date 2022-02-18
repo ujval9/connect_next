@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:connectnext_app/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'activedelivery.dart';
+import 'mydeliveries.dart';
 import 'dashboard.dart';
 
 class MasterScreen extends StatefulWidget {
@@ -13,26 +15,27 @@ class MasterScreen extends StatefulWidget {
 }
 
 class _MasterScreenState extends State<MasterScreen> {
-  int _currentIndex = 0;
   final List<Widget> _screens = [
     const DashboardPage(),
-    const ActiveDeliveryPage(),
+    const MyDeliveryPage(),
     const ProfilePage(),
   ];
 
+  int _selectedIndex = 0;
+  PageController _pageController = PageController();
   @override
   void initState() {
     super.initState();
-
     setState(
       () {
-        _currentIndex = int.parse(Get.parameters['index'] ?? '0');
+        _selectedIndex = int.parse(Get.parameters['index'] ?? '0');
       },
+    );
+    _pageController = PageController(
+      initialPage: _selectedIndex,
     );
   }
 
-  final PageController _pageController = PageController();
-  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +51,7 @@ class _MasterScreenState extends State<MasterScreen> {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).primaryColor,
         type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
+        currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
             _selectedIndex = index;
@@ -63,14 +66,26 @@ class _MasterScreenState extends State<MasterScreen> {
           BottomNavigationBarItem(
             label: "Dashboard",
             icon: Icon(Icons.grid_view),
+            activeIcon: Icon(
+              Icons.grid_view,
+              size: 40,
+            ),
           ),
           BottomNavigationBarItem(
             label: "My Deliveries",
             icon: Icon(Icons.access_time_outlined),
+            activeIcon: Icon(
+              Icons.access_time_outlined,
+              size: 40,
+            ),
           ),
           BottomNavigationBarItem(
             label: "Profile",
             icon: Icon(Icons.person),
+            activeIcon: Icon(
+              Icons.person,
+              size: 40,
+            ),
           ),
         ],
       ),
