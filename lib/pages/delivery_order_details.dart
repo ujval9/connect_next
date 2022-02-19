@@ -20,7 +20,9 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
     super.initState();
   }
 
+  final TextEditingController _otpcontroller = TextEditingController();
   String? _chosenValue = 'In Transit';
+  bool _showotp = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,50 +133,83 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Update' +
-                              Get.parameters['delivery_status'].toString()),
-                          content: Column(
-                            children: [
-                              DropdownButton<String>(
-                                focusColor: Colors.white,
-                                value: _chosenValue,
-                                //elevation: 5,
-                                style: const TextStyle(color: Colors.white),
-                                iconEnabledColor: Colors.black,
-                                items: <String>[
-                                  'In Transit',
-                                  'completed',
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                      style:
-                                          const TextStyle(color: Colors.black),
-                                    ),
-                                  );
-                                }).toList(),
+                        return StatefulBuilder(
+                            builder: (context, StateSetter setState) {
+                          return AlertDialog(
+                            title: const Text('Update'),
+                            content: Column(
+                              children: [
+                                DropdownButton<String>(
+                                  focusColor: Colors.white,
+                                  value: _chosenValue,
+                                  //elevation: 5,
+                                  style: const TextStyle(color: Colors.white),
+                                  iconEnabledColor: Colors.black,
+                                  items: <String>[
+                                    'In Transit',
+                                    'completed',
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: const TextStyle(
+                                            color: Colors.black),
+                                      ),
+                                    );
+                                  }).toList(),
 
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    _chosenValue = value;
-                                    print(_chosenValue);
-                                  });
-                                },
-                              ),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    updateOrder(
-                                        Get.parameters['order_id'].toString(),
-                                        Get.parameters['delivery_id']
-                                            .toString(),
-                                        _chosenValue ?? '');
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      _chosenValue = value;
+                                      if (value == 'completed') {
+                                        _showotp = true;
+                                      } else {
+                                        _showotp = false;
+                                      }
+                                      log(_showotp.toString());
+                                      print(_chosenValue);
+                                    });
                                   },
-                                  child: Text("Submit"))
-                            ],
-                          ),
-                        );
+                                ),
+                                if (_showotp)
+                                  TextFormField(
+                                    validator: (value) {
+                                      if ((_showotp) && (value!.isEmpty)) {
+                                        return 'Please enter OTP';
+                                      }
+                                      return null;
+                                    },
+                                    controller: _otpcontroller,
+                                    decoration: InputDecoration(
+                                        hintText: 'Customer otp',
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        contentPadding:
+                                            const EdgeInsets.fromLTRB(
+                                                20.0, 10.0, 20.0, 10.0),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5.0),
+                                            borderSide: const BorderSide(
+                                                color: Colors.white,
+                                                width: 3.0))),
+                                  ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      updateOrder(
+                                          Get.parameters['order_id'].toString(),
+                                          Get.parameters['delivery_id']
+                                              .toString(),
+                                          _chosenValue ?? '',
+                                          _otpcontroller.text);
+                                    },
+                                    child: const Text("Submit"))
+                              ],
+                            ),
+                          );
+                        });
                       },
                     );
                   },

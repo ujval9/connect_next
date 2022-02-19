@@ -21,116 +21,125 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: ordersStream,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            print('Something went Wrong');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          final List storedocs = [];
-          snapshot.data!.docs.map((DocumentSnapshot document) {
-            Map<String, dynamic> a = document.data() as Map<String, dynamic>;
-            storedocs.add(a);
-            a['id'] = document.id;
-          }).toList();
-
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text("Connect Next"),
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.supervised_user_circle_outlined,
-                    size: 30,
-                  ),
-                  onPressed: () {
-                    // Navigator.pushNamed(context, '/settings');
-                  },
-                ),
-              ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Connect Next"),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.supervised_user_circle_outlined,
+              size: 30,
             ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                physics: const ScrollPhysics(),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
+            onPressed: () {
+              // Navigator.pushNamed(context, '/settings');
+            },
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const ScrollPhysics(),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height / 3,
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [
+                      0.9,
+                      1,
+                    ],
+                    colors: [
+                      Colors.yellow,
+                      Color(0xfffffca2),
+                    ],
+                  )),
                   child: Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height / 3,
-                        decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          stops: [
-                            0.9,
-                            1,
-                          ],
-                          colors: [
-                            Colors.yellow,
-                            Color(0xfffffca2),
-                          ],
-                        )),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                style: ButtonStyle(
-                                  textStyle: MaterialStateProperty.all(
-                                    const TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                  ),
-                                  shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15.0),
-                                    ),
-                                  ),
-                                  minimumSize: MaterialStateProperty.all(
-                                    Size(
-                                      MediaQuery.of(context).size.width / 1.5,
-                                      MediaQuery.of(context).size.height / 15,
-                                    ),
-                                  ),
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Colors.black,
-                                  ),
-                                ),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text('Where are you?'),
-                                ),
-                                onPressed: () {
-                                  // print("SUBMITTED");
-                                },
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            textStyle: MaterialStateProperty.all(
+                              const TextStyle(
+                                  color: Colors.white, fontSize: 20),
+                            ),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
                               ),
-                            ]),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          "Dashboard",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500),
+                            ),
+                            minimumSize: MaterialStateProperty.all(
+                              Size(
+                                MediaQuery.of(context).size.width / 1.5,
+                                MediaQuery.of(context).size.height / 15,
+                              ),
+                            ),
+                            backgroundColor: MaterialStateProperty.all(
+                              Colors.black,
+                            ),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('Where are you?'),
+                          ),
+                          onPressed: () {
+                            // print("SUBMITTED");
+                          },
                         ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListView.builder(
-                            padding: EdgeInsets.only(
-                                bottom: MediaQuery.of(context).size.height / 5),
-                            itemCount: storedocs.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Card(
-                                  child: Padding(
+                      ]),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Dashboard",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                StreamBuilder<QuerySnapshot>(
+                  stream: ordersStream,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      print('Something went Wrong');
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No New Orders',
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                      );
+                    }
+
+                    final List storedocs = [];
+                    snapshot.data!.docs.map((DocumentSnapshot document) {
+                      Map<String, dynamic> a =
+                          document.data() as Map<String, dynamic>;
+                      storedocs.add(a);
+                      a['id'] = document.id;
+                    }).toList();
+
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView.builder(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).size.height / 5),
+                          itemCount: storedocs.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              child: Padding(
                                 padding: const EdgeInsets.only(left: 20),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,18 +194,20 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ),
                                   ],
                                 ),
-                              ));
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    );
+                  },
                 ),
-              ),
+              ],
             ),
-          );
-        });
+          ),
+        ),
+      ),
+    );
   }
 }
 

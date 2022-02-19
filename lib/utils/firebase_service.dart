@@ -8,8 +8,10 @@ import 'package:get/get.dart';
 import 'get_storage_service.dart';
 
 getOrders() {
-  final Stream<QuerySnapshot> ordersStream =
-      FirebaseFirestore.instance.collection('orders').snapshots();
+  final Stream<QuerySnapshot> ordersStream = FirebaseFirestore.instance
+      .collection('orders')
+      .where('status', isEqualTo: 'pending')
+      .snapshots();
   return ordersStream;
 }
 
@@ -79,21 +81,46 @@ acceptOrder(String orderId, String userId) {
   });
 }
 
-updateOrder(String orderId, String deliveryId, String status) {
+updateOrder(String orderId, String deliveryId, String status,
+    String customerOtp) async {
+  String orderCusOtp;
+  String dbStatus = '0';
   CollectionReference deliveries =
       FirebaseFirestore.instance.collection('deliveries');
   CollectionReference order = FirebaseFirestore.instance.collection('orders');
+  Map<String, dynamic> userData = {};
   if (status == 'In Transit') {
-    status = '1';
+    dbStatus = '1';
   } else if (status == 'completed') {
-    status = '2';
+    if (customerOtp != '') {
+      var variable = await FirebaseFirestore.instance
+          .collection('orders')
+          .doc(orderId)
+          .get();
+      userData = variable.data() ?? {};
+      Map<String, dynamic> sDMap = Map<String, dynamic>.from(userData);
+      Map<String, String> stringQueryParameters =
+          sDMap.map((key, value) => MapEntry(key, value.toString()));
+      orderCusOtp = stringQueryParameters['customer_otp'] ?? '0';
+
+      if (customerOtp == orderCusOtp) {
+        dbStatus = '2';
+      } else {
+        EasyLoading.showError('Invalid OTP');
+        return;
+      }
+    } else {
+      EasyLoading.showError('Enter Customer OTP');
+      return;
+      // Get.previousRoute;
+    }
   } else {
-    status = '0';
+    dbStatus = '0';
   }
 
-  deliveries.doc(deliveryId).update({'status': status}).then((value) {
-    if (status == '2') {
-      order.doc(orderId).update({'status': 'started'}).then((value) {
+  deliveries.doc(deliveryId).update({'status': dbStatus}).then((value) {
+    if (dbStatus == '2') {
+      order.doc(orderId).update({'status': 'completed'}).then((value) {
         EasyLoading.showSuccess('Great Success!');
         Get.offAllNamed('/master?index=1');
       }).catchError((error) {
