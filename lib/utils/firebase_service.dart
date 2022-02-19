@@ -1,8 +1,11 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+
+import 'get_storage_service.dart';
 
 getOrders() {
   final Stream<QuerySnapshot> ordersStream =
@@ -68,8 +71,12 @@ acceptOrder(String orderId, String userId) {
     order.doc(orderId).update({'status': 'started'}).then((value) {
       EasyLoading.showSuccess('Great Success!');
       Get.offAllNamed('/master?index=1');
-    }).catchError((error) => print("Failed to update user: $error"));
-  }).catchError((error) => print("Failed to add user: $error"));
+    }).catchError((error) {
+      EasyLoading.showError('Error Occured ,Please Try Again');
+    });
+  }).catchError((error) {
+    EasyLoading.showError('Error Occured ,Please Try Again');
+  });
 }
 
 updateOrder(String orderId, String deliveryId, String status) {
@@ -89,10 +96,39 @@ updateOrder(String orderId, String deliveryId, String status) {
       order.doc(orderId).update({'status': 'started'}).then((value) {
         EasyLoading.showSuccess('Great Success!');
         Get.offAllNamed('/master?index=1');
-      }).catchError((error) => print("Failed: $error"));
+      }).catchError((error) {
+        EasyLoading.showError('Error Occured ,Please Try Again');
+      });
     } else {
       EasyLoading.showSuccess('Great Success!');
       Get.offAllNamed('/master?index=1');
     }
-  }).catchError((error) => print("Failed: $error"));
+  }).catchError((error) {
+    EasyLoading.showError('Error Occured ,Please Try Again');
+  });
+}
+
+signinwithemail(email, password) async {
+  try {
+    final authResult = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+
+    if (authResult.user != null) {
+      EasyLoading.showSuccess('User Logged In Successfully!');
+      var uid = authResult.user!.uid;
+      saveUserLogin(uid, true);
+
+      Get.offAllNamed('/master');
+    } else {
+      EasyLoading.showError('Failed with Error');
+    }
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'wrong-password') {
+      EasyLoading.showError('Wrong Password Entered');
+      print('Wrong Password Entered');
+    } else {
+      EasyLoading.showError(e.message ?? 'An error occurred');
+      print('Exception @createAccount: $e');
+    }
+  }
 }

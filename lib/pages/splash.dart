@@ -1,3 +1,4 @@
+import 'package:connectnext_app/utils/get_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,12 +10,25 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  checksession() async {
+    bool loggedin = getLoggedIn() ?? false;
+
+    if (loggedin != false) {
+      return '/master';
+    } else {
+      return '/login';
+    }
+  }
+
   @override
   void initState() {
-    super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      Get.offAllNamed('/login');
+    Future.delayed(const Duration(seconds: 3), () {
+      checksession().then((value) {
+        Get.offAllNamed(value);
+      });
     });
+
+    super.initState();
   }
 
   @override

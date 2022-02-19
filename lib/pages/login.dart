@@ -1,3 +1,4 @@
+import 'package:connectnext_app/utils/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,6 +11,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _passwordVisible = false;
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -89,6 +92,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               elevation: 10.0,
                               shadowColor: Colors.black45,
                               child: TextFormField(
+                                validator: (value) {
+                                  if (value!.isEmpty || !value.contains("@")) {
+                                    return 'Please enter valid Email';
+                                  }
+                                  return null;
+                                },
+                                controller: _email,
                                 decoration: InputDecoration(
                                     hintText: 'Email',
                                     fillColor: Colors.white,
@@ -109,6 +119,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               elevation: 10.0,
                               shadowColor: Colors.black45,
                               child: TextFormField(
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter Password';
+                                  }
+                                  return null;
+                                },
+                                controller: _password,
                                 obscureText: !_passwordVisible,
                                 decoration: InputDecoration(
                                     hintText: 'Password',
@@ -169,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   // print("SUBMITTED");
-                                  Get.offAllNamed('/master');
+                                  signinwithemail(_email.text, _password.text);
                                 }
                               },
                             ),
