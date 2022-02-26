@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectnext_app/utils/firebase_service.dart';
 import 'package:connectnext_app/utils/helper.dart';
 import 'package:flutter/material.dart';
