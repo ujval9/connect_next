@@ -10,8 +10,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _passwordVisible = false;
-  TextEditingController _email = TextEditingController();
-  TextEditingController _password = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+
+  final TextEditingController forgotEmailCotroller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -194,9 +196,66 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text("Forgot Password? Click Here"),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return StatefulBuilder(
+                                  builder: (context, StateSetter setState) {
+                                return AlertDialog(
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  title: const Text('Forgot Password'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextFormField(
+                                        validator: (value) {
+                                          if (value!.isEmpty ||
+                                              !value.contains("@")) {
+                                            return 'Please enter valid Email';
+                                          }
+                                          return null;
+                                        },
+                                        controller: forgotEmailCotroller,
+                                        decoration: InputDecoration(
+                                            hintText: 'Enter Email',
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            contentPadding:
+                                                const EdgeInsets.fromLTRB(
+                                                    20.0, 10.0, 20.0, 10.0),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0),
+                                                borderSide: const BorderSide(
+                                                    color: Colors.white,
+                                                    width: 3.0))),
+                                      ),
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            forgetPasswordMail(
+                                                    forgotEmailCotroller.text)
+                                                .then((value) {
+                                              if (value) {
+                                                Navigator.pop(context);
+                                                forgotEmailCotroller.clear();
+                                              }
+                                            });
+                                          },
+                                          child: const Text("Submit"))
+                                    ],
+                                  ),
+                                );
+                              });
+                            },
+                          );
+                        },
+                        child: const Text("Forgot Password? Click Here")),
                   ),
                 ],
               ),

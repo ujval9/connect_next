@@ -1,9 +1,11 @@
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import 'get_storage_service.dart';
 
@@ -24,12 +26,20 @@ Future<Map<String, String>> getSingleOrder(
       .get();
   userData = variable.data() ?? {};
   Map<String, dynamic> sDMap = Map<String, dynamic>.from(userData);
-  Map<String, String> stringQueryParameters =
-      sDMap.map((key, value) => MapEntry(key, value.toString()));
+  Map<String, String> stringQueryParameters = sDMap.map((key, value) {
+    if (key == 'delivery_deadline') {
+      return MapEntry(
+          key, DateFormat('dd/MM/yyyy, hh:mm a').format(value.toDate()));
+    } else {
+      return MapEntry(key, value.toString());
+    }
+  });
 
   stringQueryParameters['delivery_status'] = delivery['status'];
   stringQueryParameters['delivery_updated_at'] =
       delivery['updated_at'].toDate().toString();
+  stringQueryParameters['delivery_created_at'] =
+      delivery['created_at'].toDate().toString();
   stringQueryParameters['order_id'] = delivery['order_id'];
 
   stringQueryParameters['delivery_id'] = delivery['id'];
@@ -48,7 +58,7 @@ getMyOrders([String value = '']) {
   }
   final Stream<QuerySnapshot> ordersStream = FirebaseFirestore.instance
       .collection('deliveries')
-      .where('user_id', isEqualTo: '9X51YvsbzYbhWnjimmUtAjFRYr52')
+      .where('user_id', isEqualTo: getUid())
       .where('status', whereIn: fStatus)
       .snapshots();
   // FirebaseFirestore.instance.collection('orders').where('age', isGreaterThan: 20).snapshots();
@@ -83,12 +93,15 @@ acceptOrder(String orderId, String userId) {
 
 updateOrder(String orderId, String deliveryId, String status,
     String customerOtp) async {
+  DateTime currentPhoneDate = DateTime.now(); //DateTime
+
+  Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate); //To TimeStamp
   String orderCusOtp;
   String dbStatus = '0';
   CollectionReference deliveries =
       FirebaseFirestore.instance.collection('deliveries');
   CollectionReference order = FirebaseFirestore.instance.collection('orders');
-  Map<String, dynamic> userData = {};
+  Map<String, dynamic> orderData = {};
   if (status == 'In Transit') {
     dbStatus = '1';
   } else if (status == 'completed') {
@@ -97,14 +110,27 @@ updateOrder(String orderId, String deliveryId, String status,
           .collection('orders')
           .doc(orderId)
           .get();
-      userData = variable.data() ?? {};
-      Map<String, dynamic> sDMap = Map<String, dynamic>.from(userData);
+      orderData = variable.data() ?? {};
+      Map<String, dynamic> sDMap = Map<String, dynamic>.from(orderData);
       Map<String, String> stringQueryParameters =
           sDMap.map((key, value) => MapEntry(key, value.toString()));
       orderCusOtp = stringQueryParameters['customer_otp'] ?? '0';
 
       if (customerOtp == orderCusOtp) {
         dbStatus = '2';
+        CollectionReference payments =
+            FirebaseFirestore.instance.collection('payments');
+        payments.add({
+          'user_id': getUid(),
+          'delivery_id': deliveryId,
+          'base_amount': stringQueryParameters['base_amount'] ?? '0',
+          'final_amount': stringQueryParameters['base_amount'] ?? '0',
+          'created_at': myTimeStamp,
+          'updated_at': myTimeStamp,
+          'ispaid': false,
+        }).catchError((error) {
+          EasyLoading.showError('Error Occured ,Please Try Again');
+        });
       } else {
         EasyLoading.showError('Invalid OTP');
         return;
@@ -118,7 +144,9 @@ updateOrder(String orderId, String deliveryId, String status,
     dbStatus = '0';
   }
 
-  deliveries.doc(deliveryId).update({'status': dbStatus}).then((value) {
+  deliveries
+      .doc(deliveryId)
+      .update({'status': dbStatus, 'updated_at': myTimeStamp}).then((value) {
     if (dbStatus == '2') {
       order.doc(orderId).update({'status': 'completed'}).then((value) {
         EasyLoading.showSuccess('Great Success!');
@@ -157,5 +185,20 @@ signinwithemail(email, password) async {
       EasyLoading.showError(e.message ?? 'An error occurred');
       print('Exception @createAccount: $e');
     }
+  }
+}
+
+Future forgetPasswordMail(String email) async {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  try {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+    EasyLoading.showSuccess('Reset Password Email sent');
+
+    return true;
+  } on FirebaseAuthException catch (e) {
+    EasyLoading.showError(e.message.toString());
+
+    return false;
+    // show the snackbar here
   }
 }

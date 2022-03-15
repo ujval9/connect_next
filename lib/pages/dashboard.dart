@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectnext_app/utils/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -45,7 +46,7 @@ class _DashboardPageState extends State<DashboardPage> {
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 3,
+                  height: MediaQuery.of(context).size.height / 5,
                   decoration: const BoxDecoration(
                       gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -86,7 +87,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           ),
                           child: const Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: Text('Where are you?'),
+                            child: Text('Select a new order'),
                           ),
                           onPressed: () {
                             // print("SUBMITTED");
@@ -163,6 +164,12 @@ class _DashboardPageState extends State<DashboardPage> {
                                           'To: ' + storedocs[index]['to_area']),
                                     ),
                                     Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(5, 5, 5, 0),
+                                      child: Text('Base Amount: ' +
+                                          storedocs[index]['base_amount']),
+                                    ),
+                                    Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           5, 5, 5, 10),
                                       child: ElevatedButton(
@@ -178,9 +185,22 @@ class _DashboardPageState extends State<DashboardPage> {
                                                     storedocs[index]);
                                             Map<String, String>
                                                 stringQueryParameters =
-                                                sDMap.map((key, value) =>
-                                                    MapEntry(
-                                                        key, value.toString()));
+                                                sDMap.map(
+                                              (key, value) {
+                                                if (key ==
+                                                    'delivery_deadline') {
+                                                  return MapEntry(
+                                                      key,
+                                                      DateFormat(
+                                                              'dd/MM/yyyy, hh:mm a')
+                                                          .format(
+                                                              value.toDate()));
+                                                } else {
+                                                  return MapEntry(
+                                                      key, value.toString());
+                                                }
+                                              },
+                                            );
                                             var parameters =
                                                 stringQueryParameters;
                                             Get.toNamed("/order_details",

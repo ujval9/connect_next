@@ -13,6 +13,6 @@ getStatus(String value) {
 }
 
 getDateFromTimestamp(dateTime) {
-  var format = DateFormat('d-MM-y'); // <- use skeleton here
+  var format = DateFormat('dd/MM/yyyy, hh:mm a'); // <- use skeleton here
   return format.format(DateTime.parse(dateTime));
 }
