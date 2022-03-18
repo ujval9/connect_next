@@ -243,7 +243,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                   ),
                   Text(
                     'Order Description: ' +
-                        Get.parameters['deliveries'].toString(),
+                        Get.parameters['description'].toString(),
                     style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18.0,
