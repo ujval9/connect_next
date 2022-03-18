@@ -1,7 +1,9 @@
 import 'package:connectnext_app/pages/profile.dart';
+import 'package:connectnext_app/utils/get_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../utils/firebase_service.dart';
 import 'mydeliveries.dart';
 import 'dashboard.dart';
 
@@ -24,6 +26,7 @@ class _MasterScreenState extends State<MasterScreen> {
   @override
   void initState() {
     super.initState();
+    updateFcmToken();
     setState(
       () {
         _selectedIndex = int.parse(Get.parameters['index'] ?? '0');

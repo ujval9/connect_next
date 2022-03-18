@@ -171,9 +171,14 @@ signinwithemail(email, password) async {
     if (authResult.user != null) {
       EasyLoading.showSuccess('User Logged In Successfully!');
       var uid = authResult.user!.uid;
-      saveUserLogin(uid, true);
-
-      Get.offAllNamed('/master');
+      var userData =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (userData.data()!['is_active'] == '1') {
+        saveUserLogin(uid, true);
+        Get.offAllNamed('/master');
+      } else {
+        EasyLoading.showError('User not active,Please contact admin');
+      }
     } else {
       EasyLoading.showError('Failed with Error');
     }
@@ -200,5 +205,15 @@ Future forgetPasswordMail(String email) async {
 
     return false;
     // show the snackbar here
+  }
+}
+
+void updateFcmToken() {
+  String token = getFcmToken();
+  if (token != '') {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(getUid())
+        .update({'fcm_token': token});
   }
 }

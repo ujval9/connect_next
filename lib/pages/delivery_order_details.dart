@@ -352,6 +352,7 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
                                 ),
                                 if (_showotp)
                                   TextFormField(
+                                    keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if ((_showotp) && (value!.isEmpty)) {
                                         return 'Please enter OTP';

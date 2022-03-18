@@ -23,3 +23,12 @@ getLoggedIn() {
   final box = GetStorage();
   return box.read('isLogin');
 }
+
+storeFcmToken(token) {
+  GetStorage().write('fcm_token', token);
+}
+
+getFcmToken() {
+  String? token = GetStorage().read('fcm_token');
+  return token ?? '';
+}
