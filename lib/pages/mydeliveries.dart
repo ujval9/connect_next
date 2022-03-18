@@ -19,20 +19,9 @@ class MyDeliveryPageState extends State<MyDeliveryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow,
+      // backgroundColor: Colors.yellow,
       appBar: AppBar(
         title: const Text("Connect Next"),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.supervised_user_circle_outlined,
-              size: 30,
-            ),
-            onPressed: () {
-              // Navigator.pushNamed(context, '/settings');
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         physics: const ScrollPhysics(),

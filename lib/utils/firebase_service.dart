@@ -47,7 +47,6 @@ Future<Map<String, String>> getSingleOrder(
 }
 
 getMyOrders([String value = '']) {
-  log(value.toString());
   List fStatus = ['1', '0'];
   if (value.isNotEmpty) {
     if (value == 'completed') {
@@ -216,4 +215,66 @@ void updateFcmToken() {
         .doc(getUid())
         .update({'fcm_token': token});
   }
+}
+
+Future<Map<dynamic, dynamic>> getUserDetails() async {
+  //  Map<String, dynamic> userData = value.data() ?? {};
+  //     Map<String, String> stringQueryParameters =
+  //         userData.map((key, value) => MapEntry(key, value.toString()));
+  //     // saveUserDetails(stringQueryParameters);
+  //     return stringQueryParameters;
+
+  Map<String, dynamic> userData = {};
+  var variable =
+      await FirebaseFirestore.instance.collection('users').doc(getUid()).get();
+  userData = variable.data() ?? {};
+  Map<String, dynamic> sDMap = Map<String, dynamic>.from(userData);
+  Map<String, String> stringQueryParameters = sDMap.map((key, value) {
+    return MapEntry(key, value.toString());
+  });
+  return stringQueryParameters;
+}
+
+getMyPayments([String value = '']) {
+  // if (value.isNotEmpty) {
+  //   if (value == 'completed') {
+  //     fStatus = ['2'];
+  //   } else {
+  //     fStatus = ['1', '0'];
+  //   }
+  // }
+
+  final Stream<QuerySnapshot> ordersStream = FirebaseFirestore.instance
+      .collection('payments')
+      .where('user_id', isEqualTo: getUid())
+      // .where('status', whereIn: fStatus)
+      .snapshots();
+
+  // FirebaseFirestore.instance.collection('orders').where('age', isGreaterThan: 20).snapshots();
+  return ordersStream;
+}
+
+Future getOrderIdForPayment(deliveryId) async {
+  Map<String, dynamic> userData = {};
+  Map<String, dynamic> userData2 = {};
+  var variable = await FirebaseFirestore.instance
+      .collection('deliveries')
+      .doc(deliveryId)
+      .get();
+  userData = variable.data() ?? {};
+  Map<String, dynamic> sDMap = Map<String, dynamic>.from(userData);
+  Map<String, String> stringQueryParameters = sDMap.map((key, value) {
+    return MapEntry(key, value.toString());
+  });
+  var variable2 = await FirebaseFirestore.instance
+      .collection('orders')
+      .doc(stringQueryParameters['order_id'])
+      .get();
+  userData2 = variable2.data() ?? {};
+  Map<String, dynamic> sDMap2 = Map<String, dynamic>.from(userData2);
+  Map<String, String> stringQueryParameters2 = sDMap2.map((key, value) {
+    return MapEntry(key, value.toString());
+  });
+  stringQueryParameters2['order_id'] = variable2.id;
+  return stringQueryParameters2;
 }

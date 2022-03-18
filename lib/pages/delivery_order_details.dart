@@ -345,7 +345,7 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
                                       } else {
                                         _showotp = false;
                                       }
-                                      log(_showotp.toString());
+
                                       print(_chosenValue);
                                     });
                                   },

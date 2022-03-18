@@ -25,17 +25,6 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Connect Next"),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.supervised_user_circle_outlined,
-              size: 30,
-            ),
-            onPressed: () {
-              // Navigator.pushNamed(context, '/settings');
-            },
-          ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(

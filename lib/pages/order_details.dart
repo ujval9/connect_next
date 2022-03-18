@@ -19,12 +19,6 @@ class OrderDetailsPage extends StatefulWidget {
 class _OrderDetailsPageState extends State<OrderDetailsPage> {
   @override
   void initState() {
-    // var todayDate = DateFormat("dd-MM-yyyy")
-    //     .parse(Get.parameters['delivery_deadline'].toString());
-    // log(todayDate.toString());
-    log(Get.parameters['delivery_deadline'].toString());
-
-    log("saddsads");
     super.initState();
   }
 
