@@ -68,7 +68,6 @@ class MyDeliveryPageState extends State<MyDeliveryPage> {
                         ordersStream = getMyOrders(value ?? '');
                         setState(() {
                           _chosenValue = value;
-                          print(_chosenValue);
                         });
                       },
                     ),
@@ -81,7 +80,12 @@ class MyDeliveryPageState extends State<MyDeliveryPage> {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    print('Something went Wrong');
+                    return Center(
+                      child: Text(
+                        'Something went Wrong',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    );
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(

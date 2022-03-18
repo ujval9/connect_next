@@ -1,10 +1,8 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectnext_app/utils/firebase_service.dart';
-import 'package:connectnext_app/utils/helper.dart';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:intl/intl.dart';
 
 class MyPayments extends StatefulWidget {
@@ -18,7 +16,7 @@ class MyPaymentsState extends State<MyPayments> {
   late Stream<QuerySnapshot> ordersStream = getMyPayments();
 
   CollectionReference orders = FirebaseFirestore.instance.collection('orders');
-  String? _chosenValue = 'live';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +35,12 @@ class MyPaymentsState extends State<MyPayments> {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    print('Something went Wrong');
+                    return Center(
+                      child: Text(
+                        'Something went Wrong',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    );
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
@@ -71,7 +74,7 @@ class MyPaymentsState extends State<MyPayments> {
                           var isPaid = storedocs[index]['ispaid'] == true
                               ? 'Paid'
                               : 'Not Paid';
-                          var updated_at = DateFormat('dd/MM/yyyy, hh:mm a')
+                          var updatedAt = DateFormat('dd/MM/yyyy, hh:mm a')
                               .format(storedocs[index]['updated_at'].toDate());
                           return Card(
                               color: const Color(0xFFF5F6F9),
@@ -133,7 +136,7 @@ class MyPaymentsState extends State<MyPayments> {
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           0, 10, 0, 0),
-                                      child: Text('Updated At: ' + updated_at),
+                                      child: Text('Updated At: ' + updatedAt),
                                     ),
                                   ],
                                 ),

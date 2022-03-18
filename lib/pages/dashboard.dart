@@ -96,7 +96,12 @@ class _DashboardPageState extends State<DashboardPage> {
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
-                      print('Something went Wrong');
+                      return Center(
+                        child: Text(
+                          'Something went Wrong',
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                      );
                     }
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(

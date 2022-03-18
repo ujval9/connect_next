@@ -37,21 +37,21 @@ class ProfileDetailsView extends StatelessWidget {
             return Center(
               child: Text(
                 '${snapshot.error} occured',
-                style: TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18),
               ),
             );
 
             // if we got our data
           } else if (snapshot.hasData) {
             // Extracting data from snapshot object
-            final data = snapshot.data;
+            // final data = snapshot.data;
             final name =
                 snapshot.data['f_name'] + ' ' + snapshot.data['l_name'];
-            final uid = snapshot.data['uid'];
-            final contact_no = snapshot.data['contact_no'];
+            // final uid = snapshot.data['uid'];
+            final contactNo = snapshot.data['contact_no'];
             final email = snapshot.data['email'];
-            final aadhar_no = snapshot.data['aadhar_no'];
-            final alternate_mobile_no = snapshot.data['alternate_mobile_no'];
+            final aadharNo = snapshot.data['aadhar_no'];
+            final alternateMobileNo = snapshot.data['alternate_mobile_no'];
             final address = snapshot.data['address_line1'] +
                 ',' +
                 snapshot.data['address_line2'] +
@@ -74,7 +74,7 @@ class ProfileDetailsView extends StatelessWidget {
                   ),
                   getHeadTextWidget('Contact Number'),
                   const SizedBox(height: 10),
-                  getChildTextWidget(contact_no),
+                  getChildTextWidget(contactNo),
                   const Divider(
                     color: Colors.black,
                   ),
@@ -92,13 +92,13 @@ class ProfileDetailsView extends StatelessWidget {
                   ),
                   getHeadTextWidget('Alternate Mobile Number'),
                   const SizedBox(height: 10),
-                  getChildTextWidget(alternate_mobile_no),
+                  getChildTextWidget(alternateMobileNo),
                   const Divider(
                     color: Colors.black,
                   ),
                   getHeadTextWidget('Aadhar Number'),
                   const SizedBox(height: 10),
-                  getChildTextWidget(aadhar_no),
+                  getChildTextWidget(aadharNo),
                   const Divider(
                     color: Colors.black,
                   ),

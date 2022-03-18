@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:connectnext_app/utils/firebase_service.dart';
 import 'package:connectnext_app/utils/helper.dart';
 import 'package:flutter/material.dart';
@@ -345,8 +344,6 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
                                       } else {
                                         _showotp = false;
                                       }
-
-                                      print(_chosenValue);
                                     });
                                   },
                                 ),

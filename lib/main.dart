@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:connectnext_app/utils/get_storage_service.dart';
@@ -26,7 +25,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('A bg message just showed up :  ${message.messageId}');
+  // print('A bg message just showed up :  ${message.messageId}');
 }
 
 Future<void> main() async {
@@ -119,13 +118,11 @@ class _MyAppState extends State<MyApp> {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
       _saveDeviceToken();
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
     } else {
-      print('User declined or has not accepted permission');
+      // print('User declined or has not accepted permission');
     }
   }
 

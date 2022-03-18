@@ -5,8 +5,6 @@ import 'package:connectnext_app/pages/profile/profilepage_view.dart';
 import 'package:connectnext_app/utils/get_storage_service.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/firebase_service.dart';
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 

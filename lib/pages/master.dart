@@ -1,5 +1,4 @@
 import 'package:connectnext_app/pages/profile.dart';
-import 'package:connectnext_app/utils/get_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
