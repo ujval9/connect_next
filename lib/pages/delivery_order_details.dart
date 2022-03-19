@@ -1,5 +1,6 @@
 import 'package:connectnext_app/utils/firebase_service.dart';
 import 'package:connectnext_app/utils/helper.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -108,16 +109,26 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
                             fontSize: 18.0,
                             fontWeight: FontWeight.w400),
                       ),
-                      GestureDetector(
-                        onTap: () => _launchURL(
-                            Get.parameters['from_gmaps_link'].toString()),
-                        child: Text(
-                          'Gmaps Links: ' +
-                              Get.parameters['from_gmaps_link'].toString(),
+                      RichText(
+                        text: TextSpan(
+                          text: 'Gmaps Link: ',
                           style: const TextStyle(
                               color: Colors.black,
                               fontSize: 18.0,
                               fontWeight: FontWeight.w400),
+                          children: <TextSpan>[
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => _launchURL(Get
+                                    .parameters['from_gmaps_link']
+                                    .toString()),
+                              text: "View",
+                              style: const TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -190,16 +201,25 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
                             fontSize: 18.0,
                             fontWeight: FontWeight.w400),
                       ),
-                      GestureDetector(
-                        onTap: () => _launchURL(
-                            Get.parameters['to_gmaps_link'].toString()),
-                        child: Text(
-                          'Gmaps Links: ' +
-                              Get.parameters['to_gmaps_link'].toString(),
+                      RichText(
+                        text: TextSpan(
+                          text: 'Gmaps Link: ',
                           style: const TextStyle(
                               color: Colors.black,
                               fontSize: 18.0,
                               fontWeight: FontWeight.w400),
+                          children: <TextSpan>[
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => _launchURL(
+                                    Get.parameters['to_gmaps_link'].toString()),
+                              text: "View",
+                              style: const TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
