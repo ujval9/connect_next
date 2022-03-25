@@ -120,13 +120,15 @@ class MyPaymentsState extends State<MyPayments> {
                                       padding: const EdgeInsets.fromLTRB(
                                           0, 10, 0, 0),
                                       child: Text('Base Amount:' +
-                                          storedocs[index]['base_amount']),
+                                          storedocs[index]['base_amount']
+                                              .toString()),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           0, 10, 0, 0),
                                       child: Text('Final Amount:' +
-                                          storedocs[index]['final_amount']),
+                                          storedocs[index]['final_amount']
+                                              .toString()),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(

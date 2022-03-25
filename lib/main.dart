@@ -1,3 +1,4 @@
+// import 'dart:developer';
 import 'dart:io';
 
 import 'package:connectnext_app/utils/get_storage_service.dart';
@@ -84,26 +85,7 @@ class _MyAppState extends State<MyApp> {
             ));
       }
     });
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-    setupInteractedMessage();
-  }
-
-// It is assumed that all messages contain a data field with the key 'type'
-  Future<void> setupInteractedMessage() async {
-    // Get any messages which caused the application to open from
-    // a terminated state.
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-
-    // If the message also contains a data property with a "type" of "chat",
-    // navigate to a chat screen
-    if (initialMessage != null) {
-      _handleMessage(initialMessage);
-    }
-
-    // Also handle any interaction when the app is in the background via a
-    // Stream listener
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+    // FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   }
 
   Future<void> registerNotification() async {
@@ -124,11 +106,6 @@ class _MyAppState extends State<MyApp> {
     } else {
       // print('User declined or has not accepted permission');
     }
-  }
-
-  void _handleMessage(RemoteMessage message) {
-    String link = message.data['link'] ?? '';
-    Navigator.pushNamed(context, '/' + link);
   }
 
   /// Get the token, save it to the database for current user
